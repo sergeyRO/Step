@@ -18,23 +18,12 @@ export default function Form() {
     const [table, SetTable] = useState<TTable>([])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
-        console.log(e.target.value)
-        console.log(e.target.name)
         SetForm(prevForm => ({...prevForm, [e.target.name]: e.target.value}))
     }
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(form)
-        table.push({
-            form
-        })
-        console.log(table)
-      /* SetTable(prevTable => ({...prevTable,
-        push({
-            data: form.data,
-            steps: form.steps
-    })}))*/
-        
+        SetTable([...table, form])
+        console.log(table)  
     }        
   return (
     <>
@@ -53,8 +42,41 @@ export default function Form() {
         </div>
     
         <div style={{clear:'both'}}>
-            <TableSteps />
+            <div style={{ display: 'flex', height: '100%', fontSize: '10px', marginBottom: '10px' }}>
+                <div style={{ width: '40%', float: 'left', marginRight: '10px' }}>
+                    <label>Дата (ДД.ММ.ГГ)</label>
+                </div>
+                <div style={{ width: '40%', float: 'left', marginRight: '5px' }}>
+                    <label>Пройдено км</label>
+                </div>
+                <div style={{ width: '20%', float: 'left', marginLeft: '5px' }}>
+                    <label>Действия</label>
+                </div>
+            </div>
         </div>
+        <div style={{clear:'both'}}>
+        <div style={{ border: '1px solid black', borderRadius: '6px', height: '100%', fontSize: '10px' }}>
+            {
+                table.map((list) =>      
+                    <div style={{ display: 'flex', height: '100%', fontSize: '10px', marginBottom: '10px', marginTop: '10px' }}>
+                        <div style={{ width: '40%', float: 'left', marginRight: '10px' }}>
+                            {list.data}
+                        </div>
+                        <div style={{ width: '40%', float: 'left', marginRight: '5px' }}>
+                            {list.steps}
+                        </div>
+                        <div style={{ width: '20%', float: 'left', marginLeft: '5px' }}>
+                            <label>Действия</label>
+                        </div>
+                    </div>
+                )
+            }  
+            </div>
+            
+            
+        </div>           
+        
+
     </form>
     </>
   )

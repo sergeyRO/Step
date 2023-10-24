@@ -1,7 +1,9 @@
 import React from 'react';
 
 
-export default function TableSteps() {
+export default function TableSteps({table: []}) {
+
+    //console.log(table)
     return (
         <>
             <div style={{ border: '1px solid black', borderRadius: '2px', display: 'flex', height: '100%', fontSize: '10px' }}>
@@ -14,6 +16,8 @@ export default function TableSteps() {
                 <div style={{ width: '20%', float: 'left', marginLeft: '5px' }}>
                     <label>Действия</label>
                 </div>
+
+
             </div>
         </>
     );
