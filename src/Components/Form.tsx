@@ -20,10 +20,14 @@ export default function Form() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         SetForm(prevForm => ({...prevForm, [e.target.name]: e.target.value}))
     }
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         SetTable([...table, form])
-        console.log(table)  
+
+        //const sorted = [...table].sort(compare);//calling compare function
+        //SetTable(sorted);//storing sorted values
+        console.log(table.sort())  
     }        
   return (
     <>
@@ -57,8 +61,8 @@ export default function Form() {
         <div style={{clear:'both'}}>
         <div style={{ border: '1px solid black', borderRadius: '6px', height: '100%', fontSize: '10px' }}>
             {
-                table.map((list) =>      
-                    <div style={{ display: 'flex', height: '100%', fontSize: '10px', marginBottom: '10px', marginTop: '10px' }}>
+                table.map((list,index) =>      
+                    <div style={{ display: 'flex', height: '100%', fontSize: '10px', marginBottom: '10px', marginTop: '10px' }} key={index}>
                         <div style={{ width: '40%', float: 'left', marginRight: '10px' }}>
                             {list.data}
                         </div>
