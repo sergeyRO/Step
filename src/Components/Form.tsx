@@ -1,20 +1,30 @@
 import React, {useState} from 'react'
 import TableSteps from './TableSteps'
+import cross from '../assets/cross.svg'
+import pencil from '../assets/pencil.svg'
 
 export interface IForm {
+    id: number,
     data: string,
     steps: number
 }
 
+let i=0
+
 type TTable = Array<IForm>
 
 export default function Form() {
+
     const [form, SetForm] = useState<IForm>(
         {
+            id: 1,
             data: "",
             steps: 0
-        }
+        } 
     )
+
+    const [index, SetIndex] = useState<number>(0)    
+
     const [table, SetTable] = useState<TTable>([])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
@@ -23,12 +33,22 @@ export default function Form() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        SetTable([...table, form])
+        SetIndex(index+1)
+        SetForm(prevForm => ({...prevForm, id: index}))
+        table.push(form)
+        SetTable([...table.sort((a,b) => new Date(b.data).valueOf() - new Date(a.data).valueOf())])
+        console.log(table)  
+    }   
+    
+    const DropStep = (/*e: React.MouseEvent<HTMLElement>*/) => {
+       // console.log(e)
+        //SetTable(table.filter(t => t !== product));
+    }
 
-        //const sorted = [...table].sort(compare);//calling compare function
-        //SetTable(sorted);//storing sorted values
-        console.log(table.sort())  
-    }        
+    const UpdateStep = (e: React.MouseEvent<HTMLElement>) => {
+        console.log(e)
+    }
+
   return (
     <>
     <form onSubmit={handleSubmit}>
@@ -69,8 +89,9 @@ export default function Form() {
                         <div style={{ width: '40%', float: 'left', marginRight: '5px' }}>
                             {list.steps}
                         </div>
-                        <div style={{ width: '20%', float: 'left', marginLeft: '5px' }}>
-                            <label>Действия</label>
+                        <div style={{ width: '10%', float: 'left', marginLeft: '5px' }}>
+                            <img src={cross} style={{width: '12px'}} onClick={DropStep}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <img src={pencil} style={{width: '12px'}} onClick={UpdateStep}/>
                         </div>
                     </div>
                 )
