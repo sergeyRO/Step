@@ -9,21 +9,19 @@ export interface IForm {
     steps: number
 }
 
-let i=0
-
 type TTable = Array<IForm>
 
 export default function Form() {
 
     const [form, SetForm] = useState<IForm>(
         {
-            id: 1,
+            id: 0,
             data: "",
             steps: 0
         } 
     )
 
-    const [index, SetIndex] = useState<number>(0)    
+    const [index, SetIndex] = useState<number>(1)    
 
     const [table, SetTable] = useState<TTable>([])
 
@@ -35,18 +33,22 @@ export default function Form() {
         e.preventDefault();
         SetIndex(index+1)
         SetForm(prevForm => ({...prevForm, id: index}))
-        table.push(form)
+        let i = table.findIndex(table => table.data == form.data)
+        console.log(10+form.steps)
+        i == -1 ? table.push(form) : table[i].steps + form.steps
         SetTable([...table.sort((a,b) => new Date(b.data).valueOf() - new Date(a.data).valueOf())])
         console.log(table)  
     }   
     
-    const DropStep = (/*e: React.MouseEvent<HTMLElement>*/) => {
-       // console.log(e)
-        //SetTable(table.filter(t => t !== product));
+    const handleRemove = (id: number) => {     
+        table.splice(table.findIndex(table => table.id == id), 1)
+        SetTable([...table])
     }
 
-    const UpdateStep = (e: React.MouseEvent<HTMLElement>) => {
-        console.log(e)
+    const handleUpdate = (id: number) => {     
+        const index = table.findIndex(table => table.id == id)
+        console.log(table[index].data)
+        SetForm(prevForm => ({...prevForm, data: table[index].data, steps: table[index].steps}))
     }
 
   return (
@@ -54,11 +56,11 @@ export default function Form() {
     <form onSubmit={handleSubmit}>
         <div style={{width:'35%', float:'left', marginRight:'10px',paddingBottom:'10px'}}>
             <label htmlFor='data'>Дата (ДД.ММ.ГГ)</label><br/>
-            <input name='data' id='data' type='date' onChange={handleChange}/>
+            <input name='data' id='data' type='date' onChange={handleChange} value={form.data}/>
         </div>
         <div style={{width:'47%', float:'left', marginRight:'5px'}}>
             <label htmlFor='steps'>Пройдено км</label><br/>
-            <input name='steps' id='steps' onChange={handleChange}/>
+            <input name='steps' id='steps' onChange={handleChange} value={form.steps}/>
         </div>
         <div style={{width:'0%', float:'left', marginLeft:'15px'}}>
             <br />
@@ -81,8 +83,8 @@ export default function Form() {
         <div style={{clear:'both'}}>
         <div style={{ border: '1px solid black', borderRadius: '6px', height: '100%', fontSize: '10px' }}>
             {
-                table.map((list,index) =>      
-                    <div style={{ display: 'flex', height: '100%', fontSize: '10px', marginBottom: '10px', marginTop: '10px' }} key={index}>
+                table.map((list) =>      
+                    <div style={{ display: 'flex', height: '100%', fontSize: '10px', marginBottom: '10px', marginTop: '10px' }} key={list.id}>
                         <div style={{ width: '40%', float: 'left', marginRight: '10px' }}>
                             {list.data}
                         </div>
@@ -90,8 +92,8 @@ export default function Form() {
                             {list.steps}
                         </div>
                         <div style={{ width: '10%', float: 'left', marginLeft: '5px' }}>
-                            <img src={cross} style={{width: '12px'}} onClick={DropStep}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <img src={pencil} style={{width: '12px'}} onClick={UpdateStep}/>
+                            <img src={cross} style={{width: '12px'}} onClick={() => handleRemove(list.id)}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <img src={pencil} style={{width: '12px'}} onClick={() => handleUpdate(list.id)}/>
                         </div>
                     </div>
                 )
