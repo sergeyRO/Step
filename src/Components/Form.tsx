@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import TableSteps from './TableSteps'
 import cross from '../assets/cross.svg'
 import pencil from '../assets/pencil.svg'
 
@@ -34,10 +33,8 @@ export default function Form() {
         SetIndex(index+1)
         SetForm(prevForm => ({...prevForm, id: index}))
         let i = table.findIndex(table => table.data == form.data)
-        console.log(10+form.steps)
-        i == -1 ? table.push(form) : table[i].steps + form.steps
+        i == -1 ? table.push(form) : table[i].steps=Number(table[i].steps) + Number(form.steps)
         SetTable([...table.sort((a,b) => new Date(b.data).valueOf() - new Date(a.data).valueOf())])
-        console.log(table)  
     }   
     
     const handleRemove = (id: number) => {     
@@ -45,10 +42,12 @@ export default function Form() {
         SetTable([...table])
     }
 
-    const handleUpdate = (id: number) => {     
+    const handleUpdate = (id: number) => {           
         const index = table.findIndex(table => table.id == id)
-        console.log(table[index].data)
         SetForm(prevForm => ({...prevForm, data: table[index].data, steps: table[index].steps}))
+        setTimeout(function(){
+            handleRemove(id)
+       },100);
     }
 
   return (
@@ -86,7 +85,11 @@ export default function Form() {
                 table.map((list) =>      
                     <div style={{ display: 'flex', height: '100%', fontSize: '10px', marginBottom: '10px', marginTop: '10px' }} key={list.id}>
                         <div style={{ width: '40%', float: 'left', marginRight: '10px' }}>
-                            {list.data}
+                            {new Date(list.data).toLocaleDateString('ru-RU', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                            })}
                         </div>
                         <div style={{ width: '40%', float: 'left', marginRight: '5px' }}>
                             {list.steps}
